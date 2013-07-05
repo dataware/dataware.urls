@@ -167,18 +167,20 @@ class ResourceDB(object):
         self.commit()
     
         
-    #/////////////////////////////////////////////////////////////////////////////////////////////
     @safety_mysql
-    def execute_query(self, query):
+    def execute_query(self, query, parameters=None):
     
-        log.info("exec query: %s" % query)
-        self.cursor.execute( query )
+        if parameters is not None:
+           self.cursor.execute(query, parameters)
+        else:
+           self.cursor.execute( query )
+        
         row = self.cursor.fetchall()
 
         if not row is None:
             return row
         else :
-            return None    
+            return None 
     
                     
     @safety_mysql

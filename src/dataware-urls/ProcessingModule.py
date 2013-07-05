@@ -163,7 +163,6 @@ class ProcessingModule( object ) :
             )     
    
     def invoke_processor_sql(self, processor_token, jsonParams, view_url):
-        log.info("IN THE SQL PROCESSOR INVOCATION")
         if processor_token is None :
             
             return self.format_process_failure(
@@ -181,8 +180,6 @@ class ProcessingModule( object ) :
                 "incorrectly formatted JSON parameters"
             ) 
     
-        log.info("AM HERE SUCCESSFULLY!")
-	log.info("json params are %s" % parameters)
         try:
             
             request = self.db.fetch_processor( processor_token )
@@ -210,9 +207,8 @@ class ProcessingModule( object ) :
         try:
             
             if self._check_constraints(resource_name, query):
-	 	log.info("EXECUTING QUERY %s " % query)	
                 execution_time = time.time()
-                result = json.dumps(self.resourcedb.execute_query(query))
+                result = json.dumps(self.resourcedb.execute_query(query,parameters))
                
                 
                 try:
