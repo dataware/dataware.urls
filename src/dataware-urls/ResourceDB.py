@@ -171,7 +171,6 @@ class ResourceDB(object):
     
         log.info("exec query: %s" % query)
         self.cursor.execute( query )
-        
         row = self.cursor.fetchall()
 
         if not row is None:

@@ -169,9 +169,14 @@ def install_request():
 
     catalog_uri = request.GET.get( "catalog_uri", None )
     resource_name = request.GET.get( "resource_name", None )
-    
+    print "am now here and catalog uri is %s" % catalog_uri
+    print "resource name is %s" % resource_name 
+
     try: 
+	print "resource uri is %s " % RESOURCE_URI
+        print "resource realm is %s" % REALM
         url = im.initiate_install( user[ "user_id" ], catalog_uri, resource_name, RESOURCE_URI, REALM)
+	print "URL IS is %s " % url
         return format_success( url )
     except ParameterException, e:
         return format_failure( "resource", e.msg )
