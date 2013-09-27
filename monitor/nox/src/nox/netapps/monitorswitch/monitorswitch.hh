@@ -29,7 +29,7 @@
 #include "hash_set.hh"
 #include "packet-in.hh"
 #include "config.h"
-#include "control.hh"
+//#include "control.hh"
 #include "dhcp_msg.hh"
 #include "string"
 
@@ -122,7 +122,7 @@ namespace vigil
 			
 			bool extract_headers(uint8_t *, uint32_t, struct nw_hdr *);
 			
-			HWDBControl *hwdb;
+			//HWDBControl *hwdb;
 			//netlink control
             struct nl_sock *sk;        //the socket to talk to netlink
             

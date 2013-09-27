@@ -2,10 +2,7 @@
     "components": [
 	{
             "name": "monitorswitch" ,
-            "library": "monitorswitch", 
-	    "dependencies":[
-		"hwdbcontroller"
-	    ]
+            "library": "monitorswitch" 
         }
     ]
 }

@@ -76,12 +76,6 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(pkglibdir)" "$(DESTDIR)$(pkglibdir)"
 LTLIBRARIES = $(pkglib_LTLIBRARIES)
-hwdbcontroller_la_LIBADD =
-am_hwdbcontroller_la_OBJECTS = hwdbcontroller_la-control.lo
-hwdbcontroller_la_OBJECTS = $(am_hwdbcontroller_la_OBJECTS)
-hwdbcontroller_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(hwdbcontroller_la_LDFLAGS) $(LDFLAGS) -o $@
 monitorswitch_la_LIBADD =
 am_monitorswitch_la_OBJECTS = monitorswitch_la-monitorswitch.lo
 monitorswitch_la_OBJECTS = $(am_monitorswitch_la_OBJECTS)
@@ -111,9 +105,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(hwdbcontroller_la_SOURCES) $(monitorswitch_la_SOURCES)
-DIST_SOURCES = $(hwdbcontroller_la_SOURCES) \
-	$(monitorswitch_la_SOURCES)
+SOURCES = $(monitorswitch_la_SOURCES)
+DIST_SOURCES = $(monitorswitch_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -305,15 +298,9 @@ EXTRA_DIST = \
 	meta.json
 
 pkglib_LTLIBRARIES = \
-	hwdbcontroller.la \
 	monitorswitch.la	
 
-hwdbcontroller_la_CPPFLAGS = $(AM_CPPFLAGS) \
--I $(top_srcdir)/src/nox -I $(top_srcdir)/src/nox/coreapps/
-
-hwdbcontroller_la_SOURCES = control.hh control.cc
-hwdbcontroller_la_LDFLAGS = -module -export-dynamic -lhwdb
-monitorswitch_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/src/nox -I$(top_srcdir)/src/nox/netapps -I /usr/include/hwdb/
+monitorswitch_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/src/nox -I$(top_srcdir)/src/nox/netapps 
 monitorswitch_la_SOURCES = monitorswitch.cc monitorswitch.hh
 monitorswitch_la_LDFLAGS = -module -export-dynamic  -lnl -lhwdb -lz -lmysqlclient -L/usr/lib/mysql/ 
 NOX_RUNTIMEFILES = meta.json
@@ -383,8 +370,6 @@ clean-pkglibLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-hwdbcontroller.la: $(hwdbcontroller_la_OBJECTS) $(hwdbcontroller_la_DEPENDENCIES) 
-	$(hwdbcontroller_la_LINK) -rpath $(pkglibdir) $(hwdbcontroller_la_OBJECTS) $(hwdbcontroller_la_LIBADD) $(LIBS)
 monitorswitch.la: $(monitorswitch_la_OBJECTS) $(monitorswitch_la_DEPENDENCIES) 
 	$(monitorswitch_la_LINK) -rpath $(pkglibdir) $(monitorswitch_la_OBJECTS) $(monitorswitch_la_LIBADD) $(LIBS)
 install-pkglibSCRIPTS: $(pkglib_SCRIPTS)
@@ -428,7 +413,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hwdbcontroller_la-control.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/monitorswitch_la-monitorswitch.Plo@am__quote@
 
 .cc.o:
@@ -451,13 +435,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
-
-hwdbcontroller_la-control.lo: control.cc
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(hwdbcontroller_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT hwdbcontroller_la-control.lo -MD -MP -MF $(DEPDIR)/hwdbcontroller_la-control.Tpo -c -o hwdbcontroller_la-control.lo `test -f 'control.cc' || echo '$(srcdir)/'`control.cc
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/hwdbcontroller_la-control.Tpo $(DEPDIR)/hwdbcontroller_la-control.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='control.cc' object='hwdbcontroller_la-control.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(hwdbcontroller_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o hwdbcontroller_la-control.lo `test -f 'control.cc' || echo '$(srcdir)/'`control.cc
 
 monitorswitch_la-monitorswitch.lo: monitorswitch.cc
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(monitorswitch_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT monitorswitch_la-monitorswitch.lo -MD -MP -MF $(DEPDIR)/monitorswitch_la-monitorswitch.Tpo -c -o monitorswitch_la-monitorswitch.lo `test -f 'monitorswitch.cc' || echo '$(srcdir)/'`monitorswitch.cc

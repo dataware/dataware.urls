@@ -1,0 +1,4 @@
+#!/bin/sh
+rm -rf /usr/share/pyshared/dataware-urls
+ucf --purge /etc/dbconfig-common/dataware-urls.conf
+ucf --purge /etc/dataware/urls_config.cfg

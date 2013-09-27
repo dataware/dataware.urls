@@ -24,7 +24,7 @@
 #include <stdexcept>
 #include <stdint.h>
 #include <mysql/mysql.h>
-
+#include <ctime>
 #include "datapath-join.hh"
 #include "datapath-leave.hh"
 #include "packet-in.hh"
@@ -33,6 +33,7 @@
 #include "netinet++/ipaddr.hh"
 
 #define BRIDGE_INTERFACE_NAME "br0"
+#define SOCK_RECV_BUF_LEN 65535  
 static MYSQL mysql;
 my_bool reconnect = 1;
 unsigned int timeout = 31536000;
@@ -50,7 +51,7 @@ MonitorSwitch::configure(const Configuration* conf) {
 	mysql_options(&mysql, MYSQL_OPT_CONNECT_TIMEOUT, &timeout);
 	mysql_options(&mysql, MYSQL_OPT_RECONNECT, &reconnect);
 	
-    if (! mysql_real_connect(&mysql, "localhost", "auser", "apass", 
+    if (! mysql_real_connect(&mysql, "localhost", "auser", "apassword", 
         "dataware_urls_data", 0, NULL, 0)) {
         /* Parameters are hostname, username, password, database, 
         port, socket, and flags. */
@@ -64,7 +65,7 @@ MonitorSwitch::configure(const Configuration* conf) {
 
 void
 MonitorSwitch::install() {
- 	resolve(hwdb);
+ 	//resolve(hwdb);
  	unsigned char addr[ETH_ALEN];
 	int s;
 	struct ifreq ifr;
@@ -113,9 +114,16 @@ void MonitorSwitch::getInstance(const Context* c,
 
 void MonitorSwitch::recordDNS(Flow flow, const Packet_in_event& pi){
 	
-	tstamp_t now  = timestamp_now();
-	char *timestring = timestamp_to_datestring(now);
+	//tstamp_t now  = timestamp_now();
+	//char *timestring = timestamp_to_datestring(now);
+        time_t now = time(NULL);	
+        struct tm *ptm  = localtime(&now);
+        char timestring[64];
+        sprintf(timestring, "%4d/%02d/%02d:%02d:%02d:%02d", ptm->tm_year+1900, ptm->tm_mon+1,
+           ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
 	
+	//printf(buf, "%4d/%02d/%02d:%02d:%02d:%02d", ptm->tm_year, ptm->tm_mon,
+        //  ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
 	uint8_t *data = pi.get_buffer()->data();
 	int32_t data_len = pi.get_buffer()->size();
     
@@ -335,7 +343,7 @@ void MonitorSwitch::addDHCPRecord(const char *action, const char *ip,
 	bytes += sprintf(q + bytes, "\"%s\") on duplicate key update\n", action);
 
 	int res;
-	res = hwdb->insert(q);
+	//res = hwdb->insert(q);
 	
 	if (res != 0) {
 		log.err("Insert failed.\n");
