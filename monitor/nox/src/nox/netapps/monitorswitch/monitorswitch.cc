@@ -47,11 +47,26 @@ Vlog_module log("monitorswitch");
 void 
 MonitorSwitch::configure(const Configuration* conf) {
     
+    const char* user;
+    const char* password;
+    const hash_map<string, string> argmap = conf->get_arguments_list(',','=');
+    hash_map<string, string>::const_iterator i;
+    
+    i = argmap.find("user");
+    
+    if (i != argmap.end())
+      user = (const char*) i->second.c_str();
+    
+    i = argmap.find("password");
+    
+    if (i != argmap.end())
+      password = (const char*) i->second.c_str();
+    
     mysql_init(&mysql);
 	mysql_options(&mysql, MYSQL_OPT_CONNECT_TIMEOUT, &timeout);
 	mysql_options(&mysql, MYSQL_OPT_RECONNECT, &reconnect);
 	
-    if (! mysql_real_connect(&mysql, "localhost", "auser", "apassword", 
+    if (! mysql_real_connect(&mysql, "localhost", user, password, 
         "dataware_urls_data", 0, NULL, 0)) {
         /* Parameters are hostname, username, password, database, 
         port, socket, and flags. */
@@ -65,7 +80,6 @@ MonitorSwitch::configure(const Configuration* conf) {
 
 void
 MonitorSwitch::install() {
- 	//resolve(hwdb);
  	unsigned char addr[ETH_ALEN];
 	int s;
 	struct ifreq ifr;
@@ -315,16 +329,6 @@ void MonitorSwitch::addDNSRecord(const char* ts, const char *mac, const char *ip
 	if (mysql_real_query(&mysql, q, strlen(q)) != 0) {
 			fprintf(stderr, "mysql error: %s\n", mysql_error(&mysql));
 	}
-	
-	
-	
-	//int res;
-	//printf("%s", q);
-	//res = hwdb->insert(q);
-	
-	//if (res != 0) {
-	//	log.err("Insert failed.\n");
-	//}
 }
 
 void MonitorSwitch::addDHCPRecord(const char *action, const char *ip, 
