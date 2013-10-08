@@ -43,7 +43,7 @@ $(function(){
         
         <div class="row">
             <div class="span8">
-                %include skeleton_data data=data
+                <div class="myview"></div>
             </div>
         </div>
     </div>

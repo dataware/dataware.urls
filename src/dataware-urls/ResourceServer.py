@@ -767,7 +767,45 @@ def home( ):
     
     print json.dumps(resources)
     
-    return template( 'home_page_template', user=user, resources=json.dumps(resources), installs=installs, data=resourcedb.fetch_summary(), template_name="skeleton_data");
+    return template( 'home_page_template', user=user, resources=json.dumps(resources), installs=installs );
+
+
+@route('/urls')
+def urls():
+
+    try:
+        user = check_login()
+    except RegisterException, e:
+        redirect( "/register" )
+    except LoginException, e:
+        return error( e.msg )
+
+    if user is None:
+        redirect( "/login" )
+
+
+    urls=[]
+
+    browsing = resourcedb.fetch_url_count()
+
+    if browsing:
+
+        multiplier = 50 / float(browsing[0]['requests']);
+
+        for row in browsing:
+
+            link = "javascript:wordclicked({'url': '%s', 'macaddrs':'%s', 'ipdaddrs':'%s' , 'requests' :%d})" % (row['url'],row['macaddrs'],row['ipaddrs'],row['requests'])
+
+            urls.append({'text': row['url'],
+                        'weight':int(float(row['requests']) * multiplier),
+                        'link': link,
+                        'html': {'title': "url browsed"}
+                        })
+
+    return json.dumps(urls)
+
+
+
  
 @route('/summary')
 def summary():

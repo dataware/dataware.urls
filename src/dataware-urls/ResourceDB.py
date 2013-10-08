@@ -62,22 +62,24 @@ class ResourceDB(object):
         
         self.connected = False;
         
-        self.TBL_SKELETON = 'skeleton_data'
+        self.TBL_TERM_URLS = 'urls'
         
          #///////////////////////////////////////
     
-        self.createQueries = [ 
-                   
-            ( self.TBL_SKELETON, """
+        self.createQueries = [
+
+          ( self.TBL_TERM_URLS, """
                 CREATE TABLE %s.%s (
-                    ts int(11), 
-                    name varchar(19), 
-                    value int(11), 
-                    PRIMARY KEY (ts,name)
+                    ts varchar(20),
+                    macaddr varchar(19),
+                    ipaddr varchar(16),
+                    url varchar(128),
+                    PRIMARY KEY (ts, macaddr, url)
                 ) DEFAULT CHARSET=latin1;
-            """  % ( self.DB_NAME , self.TBL_SKELETON ) ),
-           
-        ] 
+            """  % ( self.DB_NAME , self.TBL_TERM_URLS ) ),
+
+        ]
+
         
     #///////////////////////////////////////
     
@@ -179,43 +181,49 @@ class ResourceDB(object):
         else :
             return None    
     
-    
-    @safety_mysql                
-    def fetch_summary( self) :
-        
+                    
+    @safety_mysql
+    def fetch_urls( self) :
+
         query = """
-            SELECT * FROM %s.%s ORDER BY ts DESC LIMIT 100
-        """  % ( self.DB_NAME, self.TBL_SKELETON) 
-   
-	
+            SELECT * FROM %s.%s
+        """  % ( self.DB_NAME, self.TBL_TERM_URLS)
+
+
         self.cursor.execute( query )
         row = self.cursor.fetchall()
 
         if not row is None:
             return row
         else :
-            return []
+            return None
 
     @safety_mysql
     def fetch_schema(self, table):
         query = """
-                            SELECT column_name, data_type, is_nullable, character_maximum_length, numeric_precision 
-                            FROM information_schema.COLUMNS 
-                            WHERE table_name='%s' 
+                            SELECT column_name, data_type, is_nullable, character_maximum_length, numeric_precision
+                            FROM information_schema.COLUMNS
+                            WHERE table_name='%s'
                             AND table_schema = '%s'
                             """ % (table, self.DB_NAME)
-        self.cursor.execute( query )                    
+        self.cursor.execute( query )
         results = self.cursor.fetchall()
         return results
 
-    @safety_mysql                
-    def generate_data( self) :
+    @safety_mysql
+    def fetch_url_count( self) :
+
         query = """
-            INSERT INTO  %s.%s (ts, name, value) VALUES (%s, %s, %s)
-        """  % ( self.DB_NAME, self.TBL_SKELETON, '%s', '%s', '%s') 
-   
-        [self.cursor.execute(query, (int(time.time()), 
-                                        "".join([random.choice(string.letters[:26]) for i in xrange(12)]), 
-                                        random.randint(0,1000))) for z in xrange(100)]
-             
-        self.commit()
+            SELECT url, count(url) as requests, group_concat(distinct(macaddr)) as macaddrs, group_concat(distinct(ipaddr)) as ipaddrs FROM %s.%s GROUP BY url ORDER BY requests DESC
+        """  % ( self.DB_NAME, self.TBL_TERM_URLS)
+
+
+
+        self.cursor.execute( query )
+        row = self.cursor.fetchall()
+
+        if not row is None:
+            return row
+        else :
+            return None
+
