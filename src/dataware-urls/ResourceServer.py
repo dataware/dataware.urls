@@ -770,6 +770,15 @@ def home( ):
     return template( 'home_page_template', user=user, resources=json.dumps(resources), installs=installs );
 
 
+   
+@route( '/chromeextension', method = "POST" )
+def chromeextension( ): 
+    print "inside chrome extension" 
+    action =  request.forms.get('action')
+    arrayData =  request.forms.get('dataArray')
+    print "elements are %s , %s " %(action, arrayData)
+    
+
 @route('/urls')
 def urls():
 
