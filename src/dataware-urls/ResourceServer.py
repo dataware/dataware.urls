@@ -771,8 +771,8 @@ def home( ):
     resources = datadb.fetch_user_resources(user['user_id'])
     
     print json.dumps(resources)
-    
-    return template( 'home_page_template', user=user, resources=json.dumps(resources), installs=installs );
+    summary = resourcedb.fetch_url_count()
+    return template( 'home_page_template', user=user, resources=json.dumps(resources), installs=installs,data=json.dumps(summary));
 
 
    
@@ -833,7 +833,7 @@ def summary():
     if user is None:
         redirect( "/login" ) 
         
-    data = resourcedb.fetch_summary()    
+    data = resourcedb.fetch_url_count()    
             
     return json.dumps(data)
     

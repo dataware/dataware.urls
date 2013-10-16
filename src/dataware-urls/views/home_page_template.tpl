@@ -43,7 +43,9 @@ $(function(){
         
         <div class="row">
             <div class="span8">
-                <div class="myview"></div>
+                <div class="myview">
+                    %include url_data data=data
+                </div>
             </div>
         </div>
     </div>

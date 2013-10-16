@@ -208,8 +208,10 @@ class ProcessingModule( object ) :
             
             if self._check_constraints(resource_name, query):
                 execution_time = time.time()
+		print "executing processor!"
                 result = json.dumps(self.resourcedb.execute_query(query,parameters))
-               
+                print "got result" 
+                print result
                 
                 try:
                   

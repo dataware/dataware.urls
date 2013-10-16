@@ -62,7 +62,7 @@ class ResourceDB(object):
         
         self.connected = False;
         
-        self.TBL_TERM_URLS = 'urls'
+        self.TBL_TERM_URLS = 'urls_data'
         
          #///////////////////////////////////////
     
@@ -169,12 +169,13 @@ class ResourceDB(object):
         
     @safety_mysql
     def execute_query(self, query, parameters=None):
-    
+        print "******************************************in excute query!" 
+	print query
         if parameters is not None:
            self.cursor.execute(query, parameters)
         else:
            self.cursor.execute( query )
-        
+        print "exceuted query.." 
         row = self.cursor.fetchall()
 
         if not row is None:
@@ -215,12 +216,13 @@ class ResourceDB(object):
     def fetch_url_count( self) :
 
         query = """
-            SELECT url, count(url) as requests, group_concat(distinct(macaddr)) as macaddrs, group_concat(distinct(ipaddr)) as ipaddrs FROM %s.%s GROUP BY url ORDER BY requests DESC
+            SELECT ts, url, count(url) as requests, group_concat(distinct(macaddr)) as macaddrs, group_concat(distinct(ipaddr)) as ipaddrs FROM %s.%s GROUP BY url ORDER BY ts DESC LIMIT 50
         """  % ( self.DB_NAME, self.TBL_TERM_URLS)
 
 
 
         self.cursor.execute( query )
+        print self.cursor._executed
         row = self.cursor.fetchall()
 
         if not row is None:

@@ -10,7 +10,7 @@
 <script type="text/javascript" src="./static/knockout/knockout-mapping.js"></script>
 <script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./static/bootstrap/js/bootstrap-notify.js"></script>
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<!--<script type="text/javascript" src="http://www.google.com/jsapi"></script>-->
 
 
 <script>
