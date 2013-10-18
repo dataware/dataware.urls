@@ -874,6 +874,11 @@ def resources():
 def purge():
     datadb.purgedata()
     redirect( ROOT_PAGE )
+
+@route('/reset')
+def purge():
+    datadb.resetdata()
+    redirect( ROOT_PAGE )
     
 def worker():
     while True:

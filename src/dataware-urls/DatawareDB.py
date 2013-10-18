@@ -766,3 +766,11 @@ class DataDB(object):
             self.commit()
         except Exception, e:
             print e
+    
+    @safety_mysql    
+    def resetdata(self):
+        try:
+            self.cursor.execute("DELETE FROM %s.%s" % ( self.DB_NAME, self.TBL_DATAWARE_PROCESSORS))
+            self.commit()
+        except Exception, e:
+            print e 
