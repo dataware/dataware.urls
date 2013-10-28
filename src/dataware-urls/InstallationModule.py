@@ -52,11 +52,9 @@ class InstallationModule( object ) :
 
             
     def initiate_install( self, user_id, catalog_uri, resource_name, resource_uri, namespace ):
-        
         #check that a valid catalog_uri has been supplied
         if not self._is_valid_uri( catalog_uri ):
             raise ParameterException( "invalid catalog URI" )
-    
         #also confirm that its and endpoint (not a directory)
         if catalog_uri[ -1 ] == "/":
             raise ParameterException( "catalog URI must not end with /" )
@@ -64,10 +62,9 @@ class InstallationModule( object ) :
         #obtain the resource_id assigned by the catalog - or
         #if it doesn't exist, register ourselves at the catalog
         resource_id = self._check_registration( catalog_uri, resource_name, resource_uri, namespace )
-       
+
         #check to see if we have already made the install request
         install = self.db.fetch_install( user_id, catalog_uri, resource_name ) 
-        
         #if we have, use the state details we already have:
         if ( install ):
             state = install[ "state" ]
@@ -85,7 +82,7 @@ class InstallationModule( object ) :
             'redirect_uri': self.redirect_uri, })
         
         url = "%s/resource_request?%s" % ( catalog_uri, data )
-      
+        print "url is %s" % url      
         return url 
             
     
@@ -223,7 +220,9 @@ class InstallationModule( object ) :
         #and if not register ourselves with the catalog, and get one...
         else:
             log.info("NEW REGISTRATION, MAKING REGISTRATION REQUEST")
+	     
             catalog_response = self._make_registration_request( catalog_uri, resource_name, resource_uri, namespace )
+	    log.info("got response..")
             log.info(catalog_response)
             resource_id = self._parse_registration_results( catalog_response )
             log.info("INSERTING %s %s %s" % (catalog_uri, resource_id, resource_name))
@@ -270,6 +269,8 @@ class InstallationModule( object ) :
                 'redirect_uri': resource_uri, 
                 'namespace': namespace})
             url = "%s/resource_register" % ( catalog_uri, )
+	    print "making request to  %s" % url
+	    print "and data is %s" % data
             req = urllib2.Request( url, data )
             response = urllib2.urlopen( req )
             resource_id = response.read()

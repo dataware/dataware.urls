@@ -169,9 +169,14 @@ def install_request():
 
     catalog_uri = request.GET.get( "catalog_uri", None )
     resource_name = request.GET.get( "resource_name", None )
-    
+    print "am now here and catalog uri is %s" % catalog_uri
+    print "resource name is %s" % resource_name 
+
     try: 
+	print "resource uri is %s " % RESOURCE_URI
+        print "resource realm is %s" % REALM
         url = im.initiate_install( user[ "user_id" ], catalog_uri, resource_name, RESOURCE_URI, REALM)
+	print "URL IS is %s " % url
         return format_success( url )
     except ParameterException, e:
         return format_failure( "resource", e.msg )
@@ -766,8 +771,8 @@ def home( ):
     resources = datadb.fetch_user_resources(user['user_id'])
     
     print json.dumps(resources)
-    
-    return template( 'home_page_template', user=user, resources=json.dumps(resources), installs=installs );
+    summary = resourcedb.fetch_url_count()
+    return template( 'home_page_template', user=user, resources=json.dumps(resources), installs=installs,data=json.dumps(summary));
 
 
    
@@ -828,7 +833,7 @@ def summary():
     if user is None:
         redirect( "/login" ) 
         
-    data = resourcedb.fetch_summary()    
+    data = resourcedb.fetch_url_count()    
             
     return json.dumps(data)
     
@@ -868,6 +873,11 @@ def resources():
 @route('/purge')
 def purge():
     datadb.purgedata()
+    redirect( ROOT_PAGE )
+
+@route('/reset')
+def purge():
+    datadb.resetdata()
     redirect( ROOT_PAGE )
     
 
