@@ -870,6 +870,12 @@ def purge():
     datadb.purgedata()
     redirect( ROOT_PAGE )
     
+
+@route('/reset')
+def reset():
+    datadb.resetdata()
+    return "{'success':True}"
+    
 def worker():
     while True:
         request = pqueue.get() 
